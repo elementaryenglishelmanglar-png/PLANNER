@@ -15,8 +15,10 @@ import { DuaGenerator } from './components/dua-generator/DuaGenerator';
 import { TimelineGenerator } from './components/timeline-generator/TimelineGenerator';
 import { ReadingGenerator } from './components/reading-generator/ReadingGenerator';
 import { StudentReportsGenerator } from './components/student-reports/StudentReportsGenerator';
+import { WorksheetGenerator } from './components/worksheet-generator/WorksheetGenerator';
+import { FreeAiGenerator } from './components/free-ai/FreeAiGenerator';
 
-type ViewState = 'dashboard' | 'wizard' | 'loading' | 'plan' | 'error' | 'quizCreator' | 'curricularAdaptations' | 'wordSearch' | 'coloringImage' | 'duaGenerator' | 'timelineGenerator' | 'readingGenerator' | 'studentReports';
+type ViewState = 'dashboard' | 'wizard' | 'loading' | 'plan' | 'error' | 'quizCreator' | 'curricularAdaptations' | 'wordSearch' | 'coloringImage' | 'duaGenerator' | 'timelineGenerator' | 'readingGenerator' | 'studentReports' | 'worksheetGenerator' | 'freeAi';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('dashboard');
@@ -87,6 +89,10 @@ const App: React.FC = () => {
       setView('readingGenerator');
     } else if (toolId === 'student-reports-generator') {
         setView('studentReports');
+    } else if (toolId === 'worksheet-generator') {
+        setView('worksheetGenerator');
+    } else if (toolId === 'free-ai') {
+        setView('freeAi');
     }
     // Future tools can be routed here
   }, []);
@@ -113,6 +119,10 @@ const App: React.FC = () => {
         return <ReadingGenerator onBackToDashboard={handleNavigateToDashboard} />;
        case 'studentReports':
         return <StudentReportsGenerator onBackToDashboard={handleNavigateToDashboard} />;
+       case 'worksheetGenerator':
+        return <WorksheetGenerator onBackToDashboard={handleNavigateToDashboard} />;
+       case 'freeAi':
+        return <FreeAiGenerator onBackToDashboard={handleNavigateToDashboard} />;
       case 'loading':
         return <LoadingSpinner />;
       case 'plan':

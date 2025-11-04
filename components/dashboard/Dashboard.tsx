@@ -80,6 +80,7 @@ const allTools = [
   { icon: <YoutubeQuestionsIcon className="h-6 w-6 text-manglar-green"/>, title: 'Preguntas de Video de YouTube', description: 'Crea preguntas de comprensión para videos educativos con diferentes niveles de análisis y...', category: 'Evaluación' },
 
   // Contenido
+  { id: 'worksheet-generator', icon: <ChecklistIcon className="h-6 w-6 text-manglar-green"/>, title: 'Generador de Worksheets', description: 'Crea hojas de trabajo personalizadas con ejercicios, preguntas e imágenes para cualquier tema.', category: 'Contenido' },
   { id: 'reading-generator', icon: <ReadingIcon className="h-6 w-6 text-manglar-green"/>, title: 'Generador de Lecturas', description: 'Crea lecturas de calidad con diferentes enfoques y objetivos para mejorar la comprensión lectora.', category: 'Contenido' },
   { id: 'coloring-image-generator', icon: <ColoringIcon className="h-6 w-6 text-manglar-green"/>, title: 'Generador de Imágenes para Colorear', description: 'Genera imágenes educativas para colorear personalizadas según el tema y nivel de tus...', category: 'Contenido' },
   { icon: <ImageIcon className="h-6 w-6 text-manglar-green" />, title: 'Generador de Imágenes Educativas', description: 'Crea imágenes personalizadas para tus materiales educativos con IA.', category: 'Contenido' },
@@ -88,7 +89,7 @@ const allTools = [
   { icon: <LightBulbIcon className="h-6 w-6 text-manglar-green"/>, title: 'Generador de Ideas', description: 'Obtén propuestas innovadoras para actividades de clase, proyectos colaborativos y estrategias...', category: 'Contenido' },
   { icon: <SlidesGenIcon className="h-6 w-6 text-manglar-green"/>, title: 'Generador de Diapositivas (Beta)', description: 'Diseña presentaciones educativas interactivas con elementos visuales, animaciones y...', category: 'Contenido' },
   { id: 'word-search-generator', icon: <WordSearchIcon className="h-6 w-6 text-manglar-green"/>, title: 'Sopa de Letras', description: 'Genera sopas de letras temáticas con vocabulario específico de la asignatura,..', category: 'Contenido' },
-  { icon: <FreeIaIcon className="h-6 w-6 text-manglar-green"/>, title: 'IA Libre', description: 'Utiliza inteligencia artificial para crear contenido educativo personalizado, generar ideas y...', category: 'Contenido' },
+  { id: 'free-ai', icon: <FreeIaIcon className="h-6 w-6 text-manglar-green"/>, title: 'IA Libre', description: 'Utiliza inteligencia artificial para crear contenido educativo personalizado, generar ideas y...', category: 'Contenido' },
   { icon: <RealWorldBenefitsIcon className="h-6 w-6 text-manglar-green"/>, title: 'Beneficios del Mundo Real', description: 'Conecta los conceptos académicos con aplicaciones prácticas en la vida cotidiana y el...', category: 'Contenido' },
   { icon: <ProjectGeneratorIcon className="h-6 w-6 text-manglar-green"/>, title: 'Generador de Proyectos', description: 'Diseña proyectos interdisciplinarios con objetivos claros, cronogramas, recursos...', category: 'Contenido' },
   { icon: <GrammarCheckerIcon className="h-6 w-6 text-manglar-green"/>, title: 'Corrector Gramatical', description: 'Revisa y mejora textos académicos con correcciones gramaticales, ortográficas y...', category: 'Contenido' },

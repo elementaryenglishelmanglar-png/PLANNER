@@ -107,3 +107,18 @@ export interface StudentReportData {
   closingRemark: string;
   language: string;
 }
+
+export interface WorksheetData {
+  generationMode: 'topic' | 'text';
+  topic: string;
+  sourceText: string;
+  grade: string;
+  subject: string;
+  language: string;
+  difficulty: string;
+}
+
+export interface ChatMessage {
+  role: 'user' | 'model';
+  content: string;
+}
