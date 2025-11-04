@@ -15,6 +15,7 @@ interface StudentReportsGeneratorProps {
 
 const REPORTING_PERIODS = ["Trimestre 1", "Trimestre 2", "Trimestre 3", "Informe de Mitad de Año", "Informe Final de Año"];
 const REPORT_TONES = ["Equilibrado y Constructivo", "Positivo y Alentador", "Formal y Directo"];
+const LANGUAGES = ["Español", "Inglés", "Francés"];
 
 export const StudentReportsGenerator: React.FC<StudentReportsGeneratorProps> = ({ onBackToDashboard }) => {
     const [formData, setFormData] = useState<StudentReportData>({
@@ -27,6 +28,7 @@ export const StudentReportsGenerator: React.FC<StudentReportsGeneratorProps> = (
         behavioralImprovements: '',
         reportTone: REPORT_TONES[0],
         closingRemark: '¡Felices vacaciones!',
+        language: 'Español',
     });
     const [generatedReport, setGeneratedReport] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +41,7 @@ export const StudentReportsGenerator: React.FC<StudentReportsGeneratorProps> = (
     const createPrompt = (data: StudentReportData): string => {
         return `
             Por favor, redacta un comentario para el boletín de un estudiante con los siguientes datos:
+            - **Idioma de Salida:** ${data.language}
             - **Nombre del Estudiante:** ${data.studentName}
             - **Grado:** ${data.grade}
             - **Período del Informe:** ${data.reportingPeriod}
@@ -71,7 +74,7 @@ export const StudentReportsGenerator: React.FC<StudentReportsGeneratorProps> = (
         }
     }, [formData]);
 
-    const isFormValid = formData.studentName.trim() !== '' && formData.grade.trim() !== '' && formData.academicStrengths.trim() !== '' && formData.academicImprovements.trim() !== '';
+    const isFormValid = formData.studentName.trim() !== '' && formData.grade.trim() !== '' && formData.academicStrengths.trim() !== '' && formData.academicImprovements.trim() !== '' && formData.language.trim() !== '';
 
     return (
         <div className="flex h-full max-h-[calc(100vh-80px)] w-full bg-white rounded-2xl shadow-lg overflow-hidden animate-fade-in">
@@ -151,6 +154,12 @@ export const StudentReportsGenerator: React.FC<StudentReportsGeneratorProps> = (
                     {/* Settings */}
                     <div className="space-y-4 p-4 border rounded-lg bg-gray-50">
                          <h3 className="text-sm font-semibold text-gray-600">Configuración del Informe</h3>
+                         <div>
+                            <label htmlFor="language" className="block text-xs font-medium text-gray-700 mb-1">Idioma del Informe</label>
+                            <select id="language" value={formData.language} onChange={e => handleInputChange('language', e.target.value)} className="w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                                {LANGUAGES.map(lang => <option key={lang} value={lang}>{lang}</option>)}
+                            </select>
+                        </div>
                          <div>
                             <label htmlFor="reportTone" className="block text-xs font-medium text-gray-700 mb-1">Tono del Comentario</label>
                             <select id="reportTone" value={formData.reportTone} onChange={e => handleInputChange('reportTone', e.target.value)} className="w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm">

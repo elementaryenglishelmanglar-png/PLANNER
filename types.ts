@@ -105,4 +105,5 @@ export interface StudentReportData {
   behavioralImprovements: string;
   reportTone: string;
   closingRemark: string;
+  language: string;
 }
