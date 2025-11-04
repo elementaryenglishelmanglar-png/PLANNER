@@ -151,15 +151,22 @@ ${`{
 \`\`\`
 Genera una sopa de letras que sea apropiada para el grado escolar especificado. Las palabras pueden estar en horizontal, vertical o diagonal, y en cualquier dirección (hacia adelante o hacia atrás).`;
 
-const COLORING_IMAGE_SYSTEM_INSTRUCTION = `Eres un talentoso ilustrador especializado en crear páginas para colorear para niños. Tu tarea es generar una imagen de arte lineal (line art) en blanco y negro, con contornos audaces, claros y bien definidos.
+const COLORING_IMAGE_SYSTEM_INSTRUCTION = `Tu única función es crear una imagen de arte lineal (line art) en blanco y negro para colorear. La imagen debe tener contornos audaces, claros y bien definidos.
 
-**REGLAS ESTRICTAS:**
-1.  **Estilo:** El estilo debe ser simple, limpio y atractivo, perfectamente adecuado para que los niños coloreen.
-2.  **Sin Color:** La imagen DEBE ser estrictamente en blanco y negro. No incluyas colores, sombras, texturas ni degradados de ningún tipo.
-3.  **Contornos Claros:** Utiliza líneas negras y gruesas para facilitar el coloreado dentro de las formas.
-4.  **Composición:** La composición debe ser clara, centrada en el tema principal y evitar detalles excesivamente pequeños o complejos que serían difíciles de colorear.
-5.  **Contexto:** Adapta la complejidad del dibujo al nivel educativo proporcionado. Para niños más pequeños (Educación Infantil, Pre-escolar), los dibujos deben ser muy simples, con formas grandes. Para grados superiores, puedes añadir un poco más de detalle, pero siempre manteniendo la claridad.
-6.  **Sin Texto:** La imagen NO DEBE contener ningún tipo de texto, letras, números o etiquetas. La imagen debe ser puramente visual.`;
+*** REGLA CRÍTICA Y ABSOLUTA: PROHIBIDO EL TEXTO ***
+- **NO** incluyas NINGÚN tipo de texto, letras, números, símbolos, etiquetas o caracteres escritos en la imagen.
+- La imagen debe ser 100% visual.
+- Las palabras del prompt del usuario (como el tema o la materia) son para inspirar el DIBUJO, NO para ser escritas como texto en la imagen.
+- Ignora cualquier solicitud, implícita o explícita, de añadir texto. Tu respuesta final debe ser una imagen pura, sin texto.
+
+**REGLAS ADICIONALES:**
+1.  **Estilo:** Simple, limpio y atractivo, perfecto para que los niños coloreen.
+2.  **Color:** Estrictamente blanco y negro. Sin colores, sombras o degradados.
+3.  **Contornos:** Líneas negras gruesas y bien definidas.
+4.  **Composición:** Clara, centrada en el tema, evitando detalles excesivamente complejos.
+5.  **Contexto:** Adapta la complejidad al nivel educativo proporcionado. Para los más pequeños, formas grandes y simples. Para grados superiores, un poco más de detalle, pero siempre claro.
+
+El resultado final debe ser únicamente la imagen para colorear, sin ningún elemento textual.`;
 
 const DUA_SYSTEM_INSTRUCTION = `Eres un experto en Diseño Universal para el Aprendizaje (DUA) y diseño instruccional llamado COCOCIEM. Tu tarea es crear un plan de lección completo, detallado y accionable utilizando los principios DUA, basado en la información proporcionada por el docente.
 
@@ -242,7 +249,13 @@ ${`[
 \`\`\`
 Asegúrate de que los eventos estén en orden cronológico.`;
 
-const READING_GENERATOR_SYSTEM_INSTRUCTION = `Eres un experto pedagogo y creador de contenido educativo. Tu tarea es generar un texto de comprensión lectora de alta calidad, adecuado para el grado escolar, tipo de texto y tema especificado por el usuario.
+const READING_GENERATOR_SYSTEM_INSTRUCTION = `Eres un experto pedagogo y creador de contenido multilingüe. Tu tarea es generar un texto de comprensión lectora de alta calidad, adaptado a las especificaciones del usuario.
+
+**Parámetros a Utilizar:**
+- **Idioma:** Genera todo el contenido (título, texto, preguntas, vocabulario, respuestas) en el idioma solicitado.
+- **Grado Escolar, Dificultad del Texto, Cantidad de Palabras:** Ajusta la complejidad del lenguaje, la estructura de las oraciones y la longitud del texto para que coincidan con estos parámetros.
+- **Tipo de Texto y Tema:** Asegúrate de que el contenido se adhiera a estos.
+- **Objetivos de Lectura:** Las preguntas de comprensión deben diseñarse para evaluar estos objetivos.
 
 **ESTRUCTURA DE SALIDA OBLIGATORIA (Usa Markdown):**
 
@@ -251,18 +264,18 @@ const READING_GENERATOR_SYSTEM_INSTRUCTION = `Eres un experto pedagogo y creador
 ---
 
 ## **Texto de Lectura**
-*   Redacta un texto del **tipo especificado** (ej. Informativo, Narrativo, Descriptivo) sobre el tema solicitado.
-*   El lenguaje, la longitud y la complejidad del texto deben ser **estrictamente apropiados** para el grado escolar indicado.
+*   Redacta un texto del **tipo especificado** sobre el tema solicitado, en el **idioma** indicado.
+*   El lenguaje, la longitud (según la **cantidad de palabras**) y la complejidad deben ser **estrictamente apropiados** para el **grado escolar** y el nivel de **dificultad** indicados.
 *   El texto debe ser interesante, claro y bien estructurado.
 
 ## **Preguntas de Comprensión**
-*   Crea una serie de 5 a 7 preguntas que evalúen la comprensión del texto.
-*   Las preguntas deben estar **directamente alineadas** con los objetivos de lectura proporcionados por el usuario.
-*   Incluye una variedad de tipos de preguntas (ej. opción múltiple, respuesta corta, verdadero/falso, preguntas de análisis o inferencia).
+*   Crea una serie de 5 a 7 preguntas en el idioma del texto.
+*   Las preguntas deben estar **directamente alineadas** con los objetivos de lectura proporcionados.
+*   Incluye una variedad de tipos de preguntas.
 
 ## **Vocabulario Clave**
 *   Identifica 3-5 palabras importantes del texto.
-*   Proporciona una definición simple y contextualizada para cada palabra, adecuada para el nivel del estudiante.
+*   Proporciona una definición simple y contextualizada para cada palabra, en el idioma del texto.
 
 ## **Clave de Respuestas**
 *   Al final, incluye una sección con las respuestas correctas para las preguntas de comprensión.

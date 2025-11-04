@@ -22,12 +22,19 @@ const TEXT_TYPES = [
     "Poético",
 ];
 
+const LANGUAGES = ["Español", "Inglés", "Francés"];
+const DIFFICULTY_LEVELS = ["Principiante", "Intermedio", "Avanzado"];
+
+
 export const ReadingGenerator: React.FC<ReadingGeneratorProps> = ({ onBackToDashboard }) => {
     const [formData, setFormData] = useState<ReadingData>({
         topic: '',
         grade: '',
         objectives: '',
         textType: '',
+        language: 'Español',
+        difficulty: 'Intermedio',
+        wordCount: '',
     });
     const [generatedReading, setGeneratedReading] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -40,9 +47,12 @@ export const ReadingGenerator: React.FC<ReadingGeneratorProps> = ({ onBackToDash
     const createPrompt = (data: ReadingData): string => {
         return `
             Por favor, genera un material de comprensión lectora con las siguientes especificaciones:
+            - **Idioma:** ${data.language}
             - **Tema:** ${data.topic}
             - **Grado Escolar:** ${data.grade}
             - **Tipo de Texto:** ${data.textType}
+            - **Dificultad del Texto:** ${data.difficulty}
+            - **Cantidad de Palabras Aproximada:** ${data.wordCount || 'No especificado'}
             - **Objetivos de la Lectura:** ${data.objectives}
         `.trim();
     };
@@ -62,7 +72,7 @@ export const ReadingGenerator: React.FC<ReadingGeneratorProps> = ({ onBackToDash
         }
     }, [formData]);
 
-    const isFormValid = formData.topic.trim() !== '' && formData.grade.trim() !== '' && formData.textType.trim() !== '' && formData.objectives.trim() !== '';
+    const isFormValid = formData.topic.trim() !== '' && formData.grade.trim() !== '' && formData.textType.trim() !== '' && formData.objectives.trim() !== '' && formData.language.trim() !== '' && formData.difficulty.trim() !== '';
 
     return (
         <div className="flex h-full max-h-[calc(100vh-80px)] w-full bg-white rounded-2xl shadow-lg overflow-hidden animate-fade-in">
@@ -134,6 +144,43 @@ export const ReadingGenerator: React.FC<ReadingGeneratorProps> = ({ onBackToDash
                             <option value="" disabled>Selecciona el tipo de texto</option>
                             {TEXT_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
                         </select>
+                    </div>
+                     <div>
+                        <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-1">Idioma <span className="text-red-500">*</span></label>
+                        <select
+                            id="language"
+                            value={formData.language}
+                            onChange={e => handleInputChange('language', e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                        >
+                            {LANGUAGES.map(lang => <option key={lang} value={lang}>{lang}</option>)}
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="difficulty" className="block text-sm font-medium text-gray-700 mb-1">Dificultad del texto <span className="text-red-500">*</span></label>
+                        <select
+                            id="difficulty"
+                            value={formData.difficulty}
+                            onChange={e => handleInputChange('difficulty', e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                        >
+                            {DIFFICULTY_LEVELS.map(level => <option key={level} value={level}>{level}</option>)}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label htmlFor="wordCount" className="block text-sm font-medium text-gray-700 mb-1">Cantidad de palabras (opcional)</label>
+                        <input
+                            type="number"
+                            id="wordCount"
+                            value={formData.wordCount}
+                            onChange={e => handleInputChange('wordCount', e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                            placeholder="Ej: 250"
+                            min="50"
+                            step="10"
+                        />
                     </div>
 
                     <div>

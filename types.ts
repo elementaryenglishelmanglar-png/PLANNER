@@ -74,6 +74,9 @@ export interface ReadingData {
   grade: string;
   objectives: string;
   textType: string;
+  language: string;
+  difficulty: string;
+  wordCount: string;
 }
 
 export interface TimelineFormData {
