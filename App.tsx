@@ -14,8 +14,9 @@ import { ColoringImageGenerator } from './components/coloring-image-generator/Co
 import { DuaGenerator } from './components/dua-generator/DuaGenerator';
 import { TimelineGenerator } from './components/timeline-generator/TimelineGenerator';
 import { ReadingGenerator } from './components/reading-generator/ReadingGenerator';
+import { StudentReportsGenerator } from './components/student-reports/StudentReportsGenerator';
 
-type ViewState = 'dashboard' | 'wizard' | 'loading' | 'plan' | 'error' | 'quizCreator' | 'curricularAdaptations' | 'wordSearch' | 'coloringImage' | 'duaGenerator' | 'timelineGenerator' | 'readingGenerator';
+type ViewState = 'dashboard' | 'wizard' | 'loading' | 'plan' | 'error' | 'quizCreator' | 'curricularAdaptations' | 'wordSearch' | 'coloringImage' | 'duaGenerator' | 'timelineGenerator' | 'readingGenerator' | 'studentReports';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('dashboard');
@@ -84,6 +85,8 @@ const App: React.FC = () => {
       setView('timelineGenerator');
     } else if (toolId === 'reading-generator') {
       setView('readingGenerator');
+    } else if (toolId === 'student-reports-generator') {
+        setView('studentReports');
     }
     // Future tools can be routed here
   }, []);
@@ -108,6 +111,8 @@ const App: React.FC = () => {
         return <TimelineGenerator onBackToDashboard={handleNavigateToDashboard} />;
        case 'readingGenerator':
         return <ReadingGenerator onBackToDashboard={handleNavigateToDashboard} />;
+       case 'studentReports':
+        return <StudentReportsGenerator onBackToDashboard={handleNavigateToDashboard} />;
       case 'loading':
         return <LoadingSpinner />;
       case 'plan':

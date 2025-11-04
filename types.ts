@@ -94,3 +94,15 @@ export interface TimelineEvent {
   category: string;
   icon: string;
 }
+
+export interface StudentReportData {
+  studentName: string;
+  grade: string;
+  reportingPeriod: string;
+  academicStrengths: string;
+  academicImprovements: string;
+  behavioralStrengths: string;
+  behavioralImprovements: string;
+  reportTone: string;
+  closingRemark: string;
+}

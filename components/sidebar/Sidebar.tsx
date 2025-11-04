@@ -1,5 +1,6 @@
 
 
+
 import React from 'react';
 import { SidebarLink } from './SidebarLink';
 
@@ -22,7 +23,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, currentView }) => {
   const isLessonPlannerActive = ['wizard', 'loading', 'plan', 'error'].includes(currentView);
-  const isToolsActive = ['dashboard', 'quizCreator', 'curricularAdaptations', 'wordSearch', 'coloringImage', 'duaGenerator', 'timelineGenerator', 'readingGenerator'].includes(currentView);
+  const isToolsActive = ['dashboard', 'quizCreator', 'curricularAdaptations', 'wordSearch', 'coloringImage', 'duaGenerator', 'timelineGenerator', 'readingGenerator', 'studentReports'].includes(currentView);
   
   return (
     <aside className="w-64 bg-white border-r border-manglar-border flex flex-col p-4">
