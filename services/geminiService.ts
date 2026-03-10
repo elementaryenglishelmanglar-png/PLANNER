@@ -434,27 +434,39 @@ export async function generateWordSearch(prompt: string): Promise<any> {
 export async function generateColoringImage(prompt: string): Promise<string> {
   try {
     const fullPrompt = `${COLORING_IMAGE_SYSTEM_INSTRUCTION} "${prompt}"`;
-    const response = await ai.models.generateImages({
-      model: 'imagen-3.0-generate-001',
-      prompt: fullPrompt,
-      config: {
-        numberOfImages: 1,
-        outputMimeType: 'image/jpeg',
-        aspectRatio: '1:1'
+
+    // We bypass ai.models.generateImages() because the @google/genai SDK v1 routes
+    // browser requests to v1alpha/v1beta endpoints that currently return 404 NOT_FOUND 
+    // for 'imagen-3.0-generate-001' from client-side via the standard wrapper.
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${import.meta.env.VITE_GEMINI_API_KEY}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        instances: [{ prompt: fullPrompt }],
+        parameters: { sampleCount: 1, outputOptions: { mimeType: "image/jpeg" } },
+      }),
     });
 
-    if (response.generatedImages && response.generatedImages.length > 0) {
-      // Return base64 representation of the generated image
-      return response.generatedImages[0].image.imageBytes;
+    if (!response.ok) {
+      console.error("Imagen 3 API direct fetch failed. Status:", response.status);
+      throw new Error(`Error ${response.status}: Asegúrate de que Imagen 3 está habilitado para tu API Key.`);
+    }
+
+    const data = await response.json();
+    if (data.predictions && data.predictions.length > 0) {
+      return data.predictions[0].bytesBase64Encoded;
     }
 
     throw new Error("No se encontró ninguna imagen en la respuesta.");
 
   } catch (error) {
-    console.error("Error calling Gemini Imagen API for Coloring Image:", error);
+    console.error("Error generating image via fetch fallback:", error);
     throw new Error(
-      "No se pudo generar el dibujo con Imagen 3. Por favor, intenta con un tema diferente o verifica los permisos de la API de Imagen."
+      "No se pudo generar el dibujo con Imagen 3 debido a un error de red o permisos de la API Key."
     );
   }
 }
