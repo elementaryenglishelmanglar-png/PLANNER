@@ -6,15 +6,15 @@ import { ContentIcon } from '../icons/ContentIcon';
 import { MessageIcon } from '../icons/MessageIcon';
 
 interface FilterButtonProps {
-    children: React.ReactNode; 
+    children: React.ReactNode;
     isActive?: boolean;
     onClick: () => void;
 }
 
 const FilterButton: React.FC<FilterButtonProps> = ({ children, isActive, onClick }) => {
-    const baseClasses = "px-4 py-2 text-sm font-medium rounded-full flex items-center space-x-2 transition-colors flex-shrink-0";
-    const activeClasses = "bg-manglar-green text-white";
-    const inactiveClasses = "bg-white border border-manglar-border text-gray-700 hover:bg-gray-50";
+    const baseClasses = "px-5 py-2.5 text-sm font-semibold rounded-xl flex items-center space-x-2 transition-all duration-300 flex-shrink-0 cursor-pointer select-none";
+    const activeClasses = "bg-gradient-to-r from-manglar-green to-[#2E7D32] text-white shadow-md transform scale-105";
+    const inactiveClasses = "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-manglar-black shadow-sm hover:shadow";
 
     return (
         <button onClick={onClick} className={`${baseClasses} ${isActive ? activeClasses : inactiveClasses}`}>
@@ -39,19 +39,19 @@ const filters = [
 
 export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({ activeFilter, onFilterChange }) => {
     return (
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="relative w-full md:w-auto md:flex-1 md:max-w-xs">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input 
-                    type="text" 
-                    placeholder="Buscar una herramienta..."
-                    className="w-full pl-10 pr-4 py-2 border border-manglar-border rounded-full focus:ring-2 focus:ring-manglar-green focus:outline-none"
+        <div className="flex flex-col md:flex-row justify-between items-center space-y-5 md:space-y-0 mb-8 p-1">
+            <div className="relative w-full md:w-auto md:flex-1 md:max-w-md group">
+                <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-manglar-green transition-colors" />
+                <input
+                    type="text"
+                    placeholder="Encuentra la herramienta ideal..."
+                    className="w-full pl-12 pr-5 py-3.5 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-4 focus:ring-manglar-light-green focus:border-manglar-green focus:outline-none transition-all duration-300 text-gray-700 placeholder-gray-400"
                 />
             </div>
             <div className="flex items-center space-x-2 overflow-x-auto pb-2 -mx-6 px-6 md:mx-0 md:px-0">
-                 {filters.map(filter => (
-                    <FilterButton 
-                        key={filter.name} 
+                {filters.map(filter => (
+                    <FilterButton
+                        key={filter.name}
                         isActive={activeFilter === filter.name}
                         onClick={() => onFilterChange(filter.name)}
                     >

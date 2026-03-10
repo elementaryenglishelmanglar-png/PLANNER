@@ -17,8 +17,10 @@ import { ReadingGenerator } from './components/reading-generator/ReadingGenerato
 import { StudentReportsGenerator } from './components/student-reports/StudentReportsGenerator';
 import { WorksheetGenerator } from './components/worksheet-generator/WorksheetGenerator';
 import { FreeAiGenerator } from './components/free-ai/FreeAiGenerator';
+import { HistoryView } from './components/history/HistoryView';
+import { historyService } from './services/historyService';
 
-type ViewState = 'dashboard' | 'wizard' | 'loading' | 'plan' | 'error' | 'quizCreator' | 'curricularAdaptations' | 'wordSearch' | 'coloringImage' | 'duaGenerator' | 'timelineGenerator' | 'readingGenerator' | 'studentReports' | 'worksheetGenerator' | 'freeAi';
+type ViewState = 'dashboard' | 'wizard' | 'loading' | 'plan' | 'error' | 'quizCreator' | 'curricularAdaptations' | 'wordSearch' | 'coloringImage' | 'duaGenerator' | 'timelineGenerator' | 'readingGenerator' | 'studentReports' | 'worksheetGenerator' | 'freeAi' | 'history';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('dashboard');
@@ -50,7 +52,7 @@ const App: React.FC = () => {
 
   const handleGeneratePlan = useCallback(async (data: LessonData) => {
     const prompt = createPromptFromData(data);
-    
+
     setView('loading');
     setError(null);
     setLessonPlan(null);
@@ -58,6 +60,14 @@ const App: React.FC = () => {
     try {
       const plan = await generateLessonPlan(prompt);
       setLessonPlan(plan);
+
+      // Save history background task
+      historyService.saveGeneration({
+        tool_id: 'lesson-planner',
+        prompt_data: data,
+        generated_result: plan
+      });
+
       setView('plan');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
@@ -67,101 +77,84 @@ const App: React.FC = () => {
   }, []);
 
   const handleNavigateToDashboard = () => setView('dashboard');
-  
-  const handleSidebarNavigate = (view: 'dashboard' | 'wizard') => setView(view);
-  
+
+  const handleSidebarNavigate = (view: 'dashboard' | 'wizard' | 'history') => setView(view);
+
   const handleNavigateToTool = useCallback((toolId: string) => {
-    if (toolId === 'lesson-planner') {
-      setView('wizard');
-    } else if (toolId === 'quiz-creator') {
-      setView('quizCreator');
-    } else if (toolId === 'curricular-adaptations-generator') {
-      setView('curricularAdaptations');
-    } else if (toolId === 'word-search-generator') {
-      setView('wordSearch');
-    } else if (toolId === 'coloring-image-generator') {
-      setView('coloringImage');
-    } else if (toolId === 'dua-generator') {
-      setView('duaGenerator');
-    } else if (toolId === 'timeline-generator') {
-      setView('timelineGenerator');
-    } else if (toolId === 'reading-generator') {
-      setView('readingGenerator');
-    } else if (toolId === 'student-reports-generator') {
-        setView('studentReports');
-    } else if (toolId === 'worksheet-generator') {
-        setView('worksheetGenerator');
-    } else if (toolId === 'free-ai') {
-        setView('freeAi');
+    const toolRoutes: Record<string, ViewState> = {
+      'lesson-planner': 'wizard',
+      'quiz-creator': 'quizCreator',
+      'curricular-adaptations-generator': 'curricularAdaptations',
+      'word-search-generator': 'wordSearch',
+      'coloring-image-generator': 'coloringImage',
+      'dua-generator': 'duaGenerator',
+      'timeline-generator': 'timelineGenerator',
+      'reading-generator': 'readingGenerator',
+      'student-reports-generator': 'studentReports',
+      'worksheet-generator': 'worksheetGenerator',
+      'free-ai': 'freeAi',
+    };
+
+    if (toolRoutes[toolId]) {
+      setView(toolRoutes[toolId]);
     }
-    // Future tools can be routed here
   }, []);
 
   const renderContent = () => {
-    switch (view) {
-      case 'dashboard':
-        return <Dashboard onSelectTool={handleNavigateToTool} />;
-      case 'wizard':
-        return <LessonPlanWizard onGenerate={handleGeneratePlan} />;
-      case 'quizCreator':
-        return <QuizCreator onBackToDashboard={handleNavigateToDashboard}/>;
-      case 'curricularAdaptations':
-        return <CurricularAdaptations onBackToDashboard={handleNavigateToDashboard} />;
-       case 'wordSearch':
-        return <WordSearchGenerator onBackToDashboard={handleNavigateToDashboard} />;
-       case 'coloringImage':
-        return <ColoringImageGenerator onBackToDashboard={handleNavigateToDashboard} />;
-       case 'duaGenerator':
-        return <DuaGenerator onBackToDashboard={handleNavigateToDashboard} />;
-       case 'timelineGenerator':
-        return <TimelineGenerator onBackToDashboard={handleNavigateToDashboard} />;
-       case 'readingGenerator':
-        return <ReadingGenerator onBackToDashboard={handleNavigateToDashboard} />;
-       case 'studentReports':
-        return <StudentReportsGenerator onBackToDashboard={handleNavigateToDashboard} />;
-       case 'worksheetGenerator':
-        return <WorksheetGenerator onBackToDashboard={handleNavigateToDashboard} />;
-       case 'freeAi':
-        return <FreeAiGenerator onBackToDashboard={handleNavigateToDashboard} />;
-      case 'loading':
-        return <LoadingSpinner />;
-      case 'plan':
-        return (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <LessonPlanDisplay plan={lessonPlan!} />
-            <div className="mt-8 text-center">
-              <button
-                onClick={() => setView('wizard')}
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-manglar-green hover:bg-manglar-green/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-manglar-green transition-all"
-              >
-                Crear Nueva Planeación
-              </button>
-            </div>
+    const commonProps = { onBackToDashboard: handleNavigateToDashboard };
+
+    const views: Record<ViewState, React.ReactNode> = {
+      dashboard: <Dashboard onSelectTool={handleNavigateToTool} />,
+      wizard: <LessonPlanWizard onGenerate={handleGeneratePlan} />,
+      quizCreator: <QuizCreator {...commonProps} />,
+      curricularAdaptations: <CurricularAdaptations {...commonProps} />,
+      wordSearch: <WordSearchGenerator {...commonProps} />,
+      coloringImage: <ColoringImageGenerator {...commonProps} />,
+      duaGenerator: <DuaGenerator {...commonProps} />,
+      timelineGenerator: <TimelineGenerator {...commonProps} />,
+      readingGenerator: <ReadingGenerator {...commonProps} />,
+      studentReports: <StudentReportsGenerator {...commonProps} />,
+      worksheetGenerator: <WorksheetGenerator {...commonProps} />,
+      freeAi: <FreeAiGenerator {...commonProps} />,
+      history: <HistoryView />,
+      loading: <LoadingSpinner />,
+      plan: (
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <LessonPlanDisplay plan={lessonPlan!} />
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => setView('wizard')}
+              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-manglar-green hover:bg-manglar-green/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-manglar-green transition-all"
+            >
+              Crear Nueva Planeación
+            </button>
           </div>
-        );
-      case 'error':
-        return (
-          <div className="space-y-6 bg-white p-6 rounded-lg shadow-md">
-            <ErrorDisplay message={error!} />
-             <div className="text-center">
-                <button
-                    onClick={() => setView('wizard')}
-                    className="text-manglar-green hover:underline"
-                >
-                    Volver a intentarlo
-                </button>
-            </div>
+        </div>
+      ),
+      error: (
+        <div className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+          <ErrorDisplay message={error!} />
+          <div className="text-center">
+            <button
+              onClick={() => setView('wizard')}
+              className="text-manglar-green hover:underline"
+            >
+              Volver a intentarlo
+            </button>
           </div>
-        );
-      default:
-        return null;
-    }
+        </div>
+      )
+    };
+
+    return views[view] || null;
   };
 
   return (
-    <div className="min-h-screen flex text-manglar-black">
+    <div className="min-h-screen flex text-manglar-black bg-gradient-to-br from-[#FAFAFC] to-[#F3F4F6] relative overflow-hidden">
+
+
       <Sidebar onNavigate={handleSidebarNavigate} currentView={view} />
-      <main className="flex-1 p-6 md:p-10 overflow-y-auto">
+      <main className="flex-1 p-6 md:p-10 overflow-y-auto relative z-10 custom-scrollbar">
         {renderContent()}
       </main>
     </div>

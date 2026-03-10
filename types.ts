@@ -122,3 +122,12 @@ export interface ChatMessage {
   role: 'user' | 'model';
   content: string;
 }
+
+export interface GenerationHistory {
+  id?: string;
+  created_at?: string;
+  tool_id: string;
+  prompt_data: any;
+  generated_result: string | object | null;
+  user_id?: string;
+}
